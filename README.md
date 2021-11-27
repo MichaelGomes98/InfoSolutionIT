@@ -49,16 +49,14 @@
 
 - Gestion commande
   - Le client à une vue de toute ses commandes
- - Le client peut afficher le detail d'une commande
+  - Le client peut afficher le detail d'une commande
 
 - Creation compte
   - L'utilisateur peut se créer un compte
 
 
 ## Architecture
-<p align="center">
-	<img width="800" height="auto" src="https://user-images.githubusercontent.com/48489202/143318755-401bda75-253e-47dd-8f10-7673c5089230.png">
-</p>
+
 
 ## Captures d'écran
 <p align="center">
