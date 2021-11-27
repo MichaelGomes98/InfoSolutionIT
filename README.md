@@ -54,10 +54,6 @@
 - Creation compte
   - L'utilisateur peut se créer un compte
 
-
-## Architecture
-
-
 ## Captures d'écran
 <p align="center">
 	<img src="https://user-images.githubusercontent.com/48489202/143691540-7c2cb168-4b77-4be1-81cb-03b7797cbc32.PNG">
