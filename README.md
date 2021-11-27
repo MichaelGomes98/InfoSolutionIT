@@ -1,7 +1,7 @@
 # InfoSolutionIT
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/48489202/143305206-04ef9213-d99b-4e39-8c49-5fff5dac33b0.png">
+  <img width="" height=""src="https://user-images.githubusercontent.com/48489202/143693246-dd1a9fe6-ffcd-4b3d-aad1-51395d31223b.png">
 </p>
 <p align="justify">
 <b>InfoSolutionIT</b> est une application de bureau déstinée à la vente de matériel informatique où le client peut commander et suivre ses commandes via l'application. En plus du coté client, une partie administrateur est également à disposition qui permettera notamment à l'entreprise de gérer les produits, les clients ainsi que les commandes via l'application.  
