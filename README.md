@@ -13,46 +13,47 @@
 * SQL
 	
 ## Fonctionnalités
-###### Partie administrateur:
-* Gestion produit 
---- L'administrateur à une vue de l'ensemble des produits visibles dans le catalogue.   
---- L'administrateur peut ajouter des produits dans le catalogue
---- L'administrateur peut supprimer des produits (suppression logique)
---- L'administrateur peut modifier les différentes caracèristique d'un produit
---- L'administrateur peut rechercher un produit selon son modèle ou sa marque grace à des filtres
+###### Partie administrateur
+- Gestion produit 
+  - L'administrateur à une vue de l'ensemble des produits visibles dans le catalogue.   
+  - L'administrateur peut ajouter des produits dans le catalogue
+  - L'administrateur peut supprimer des produits (suppression logique)
+  - L'administrateur peut modifier les différentes caracèristique d'un produit
+  - L'administrateur peut rechercher un produit selon son modèle ou sa marque grace à des filtres
 
 - Gestion client
---- L'administrateur à une vue de l'ensemble des clients
---- L'administrateur peut supprimer des clients (suppression logique)
---- L'administrateur peut modifier les données personnelles du client
---- L'administrateur peut recherche un client selon son nom ou prenom grace à des filtres
+  - L'administrateur à une vue de l'ensemble des clients
+  - L'administrateur peut supprimer des clients (suppression logique)
+  - L'administrateur peut modifier les données personnelles du client
+  - L'administrateur peut recherche un client selon son nom ou prenom grace à des filtres
 
 - Gestion commande
---- L'administrateur à une vue de l'ensemble des commandes passée
---- L'administrateur peut afficher le detail d'une commande
---- L'administrateur peut modifier le statut d'une commande
---- L'administrateur peut afficher les commandes selon le statut grace à des filtres
+  - L'administrateur à une vue de l'ensemble des commandes passée
+  - L'administrateur peut afficher le detail d'une commande
+  - L'administrateur peut modifier le statut d'une commande
+  - L'administrateur peut afficher les commandes selon le statut grace à des filtres
 
-Partie client:
-- Panier
---- Le client a une vue des produits qu'il a mis dans le panier
---- Le client peut passer une commande en validant le panier
+###### Partie client
+   - Panier
+     - Le client a une vue des produits qu'il a mis dans le panier
+     - Le client peut passer une commande en validant le panier
 
 - Catalogue
---- Le client à une vue de tout les produits
---- Le client peut afficher les details d'un produit
+  - Le client à une vue de tout les produits
+  - Le client peut afficher les details d'un produit
 
 - Gestion compte
---- Le client à une vue de ses informations personnelles que l'entreprise stock
---- Le client peut modifier ses informations
---- Le client peut modifier son mot de passe
+  - Le client à une vue de ses informations personnelles que l'entreprise stock
+  - Le client peut modifier ses informations
+  - Le client peut modifier son mot de passe
 
 - Gestion commande
---- Le client à une vue de toute ses commandes
---- Le client peut afficher le detail d'une commande
+  - Le client à une vue de toute ses commandes
+ - Le client peut afficher le detail d'une commande
 
 - Creation compte
---- L'utilisateur peut se créer un compte
+  - L'utilisateur peut se créer un compte
+
 
 ## Architecture
 <p align="center">
