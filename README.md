@@ -62,7 +62,7 @@
 	<img src="https://user-images.githubusercontent.com/48489202/143691537-793e3d32-7ac7-468d-a020-12d1abe8da1a.PNG">
 </p>
 <p align="center">
-	<img src="https://user-images.githubusercontent.com/48489202/143691825-38fe5927-aaa0-4191-99cc-c54767fc4571.PNG)">
+	<img src="https://user-images.githubusercontent.com/48489202/143691825-38fe5927-aaa0-4191-99cc-c54767fc4571.PNG">
 </p>
 <p align="center">
 	<img src="https://user-images.githubusercontent.com/48489202/143691536-b6e73768-8f80-4dd0-83af-73026079beb6.PNG">
