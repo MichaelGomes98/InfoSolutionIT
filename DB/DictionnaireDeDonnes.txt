@@ -1,0 +1,68 @@
+-- -----------------------------------------------------------------------------
+--                     DICTIONNAIRE DE DONNEES
+--                      Oracle Version 10g
+--                        (7/5/2020 15:37:49)
+-- -----------------------------------------------------------------------------
+--      Projet : EASYSTORE
+--      Auteur : Gomes
+--      Date de dernière modification : 7/5/2020 15:37:42
+-- -----------------------------------------------------------------------------
+
+-- -----------------------------------------------------------------------------
+--       TABLE : UTILISATEUR
+-- -----------------------------------------------------------------------------
+--  COLONNE           |      TYPE      |         DESCRIPTION
+    UTI_ID            |  NUMBER(6)     | Identifiant de l'utilisateur 
+    UTI_NOM           |  VARCHAR2(128) | Nom de l'utilisateur
+    UTI_PRENOM        |  VARCHAR2(128) | Prenom de l'utilisateur
+    UTI_ADRESSE       |  VARCHAR2(128) | Adresse de l'utilisateur
+    UTI_CODEPOSTAL    |  NUMBER(4)     | Code postal de l'utilisateur (La clientèle est suisse et francaise)
+    UTI_EMAIL         |  VARCHAR2(128) | Email de l'utilisateur
+    UTI_PASSWORD      |  VARCHAR2(128) | Mot de passe de l'utilisateur (qui sera crypté)
+    UTI_CONNECTED     |  NUMBER(1)     | Indique si l'utilisateur est connecté (valeur possible : 0 et 1)
+    UTI_ROLE 	      |	 NUMBER(1)     | Indique si l'utilisateur est administrateur ou client (valeur possible : 0 et 1)
+
+
+
+-- -----------------------------------------------------------------------------
+--       TABLE : UTILISATEUR
+-- -----------------------------------------------------------------------------
+--  COLONNE           |      TYPE      |         DESCRIPTION
+    COM_ID	      |  NUMBER(6)     | Identifiant de la commande 
+    UTI_ID            |  NUMBER(6)     | Identifiant de l'utilisateur (FK)
+    COM_NUMERO 	      |  NUMBER(6)     | Numéro de la commande
+    COM_DATE          |  DATE          | Date de la commande
+    COM_STATUT        |  CHAR(32)      | Statut de la commande -> valeur en char et non en caractère variable car les valeurs stocké dans la base ne changerons pas (Valeur possible : panier, annulé, en préparation, Prête à être retirée)
+    COM_TOTAL         |  NUMBER(5,2)   | Total de la commande (deux chiffre après la virgule pour représenter les centimes)
+
+-- -----------------------------------------------------------------------------
+--       TABLE : PRODUIT
+-- -----------------------------------------------------------------------------
+--  COLONNE           |      TYPE      |         DESCRIPTION
+    PRO_ID            |    NUMBER(6)   | Identifiant du produit
+    PRO_TYPE          |  VARCHAR2(128) | Type du produit
+    PRO_MODELE        |  VARCHAR2(128) | Modele du produit
+    PRO_DESCRIPTION   |  VARCHAR2(3000)| Description du produit (Généralement longue suivant le produit)
+    PRO_MARQUE        |  VARCHAR2(128) | Marque du produit
+    PRO_PRIX          |  NUMBER(5,2)   | Prix du produit (deux chiffre après la virgule pour représenter les centimes)
+    PRO_IMAGE         |  VARCHAR2(3000)| Lien de l'image du produit (Généralement long suivant les serveurs)
+
+-- -----------------------------------------------------------------------------
+--       TABLE : LIGNE_COMMANDE
+-- -----------------------------------------------------------------------------
+--  COLONNE           |      TYPE      |         DESCRIPTION
+    COM_ID 	      |  NUMBER(6)     | Identifiant d'une commande (FK)
+    PRO_ID            |  NUMBER(6)     | Identifiant du produit (FK)
+    LIG_QUANTITE      |  NUMBER(2)     | Quantité commandée
+    PRO_PRIX          |  NUMBER(5,2)   | Prix de la commande (deux chiffre après la virgule pour représenter les centimes)
+
+
+-- -----------------------------------------------------------------------------
+--       TABLE : EVALUATION
+-- -----------------------------------------------------------------------------
+--  COLONNE           |      TYPE      |         DESCRIPTION
+    UTI_ID            |  NUMBER(6)     | Identifiant de l'utilisateur (FK)
+    PRO_ID            |  NUMBER(6)     | Identifiant du produit (FK)
+    EVA_NOTES         |  CHAR(32)      | Notes des utilisateurs
+    EVA_COMMENTAIRE   |  CHAR(32)      | Commentaire des utilisateur (Peut être des chiffres ou des lettres)
+
