@@ -1,0 +1,241 @@
+SQL> @.\03_tables_EasyStore.sql
+SQL> -- -----------------------------------------------------------------------------
+SQL> -- 	    Génération d'une base de données pour
+SQL> -- 		     Oracle Version 10g
+SQL> -- 		       (7/5/2020 16:52:05)
+SQL> -- -----------------------------------------------------------------------------
+SQL> --      Nom de la base : MLR7
+SQL> --      Projet :
+SQL> --      Auteur : Gomes
+SQL> --      Date de dernière modification : 7/5/2020 16:51:57
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> DROP TABLE UTILISATEUR CASCADE CONSTRAINTS;
+DROP TABLE UTILISATEUR CASCADE CONSTRAINTS
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> DROP TABLE COMMANDE CASCADE CONSTRAINTS;
+DROP TABLE COMMANDE CASCADE CONSTRAINTS
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> DROP TABLE PRODUIT CASCADE CONSTRAINTS;
+DROP TABLE PRODUIT CASCADE CONSTRAINTS
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> DROP TABLE LIGNE_COMMANDE CASCADE CONSTRAINTS;
+DROP TABLE LIGNE_COMMANDE CASCADE CONSTRAINTS
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> DROP TABLE EVALUATION CASCADE CONSTRAINTS;
+DROP TABLE EVALUATION CASCADE CONSTRAINTS
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       TABLE : UTILISATEUR
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE TABLE UTILISATEUR
+  2  	(
+  3  	 UTI_ID NUMBER(6)  NOT NULL,
+  4  	 UTI_NOM VARCHAR2(128)	NOT NULL,
+  5  	 UTI_PRENOM VARCHAR2(128)  NOT NULL,
+  6  	 UTI_ADRESSE VARCHAR2(128)  NOT NULL,
+  7  	 UTI_CODEPOSTAL NUMBER(5)  NOT NULL,
+  8  	 UTI_EMAIL VARCHAR2(128)  NOT NULL,
+  9  	 UTI_PASSWORD VARCHAR2(128)  NOT NULL,
+ 10  	 UTI_CONNECTED NUMBER(1)  NOT NULL,
+ 11  	 UTI_ROLE NUMBER(1)  NOT NULL
+ 12  ,	 CONSTRAINT PK_UTILISATEUR PRIMARY KEY (UTI_ID)
+ 13  	) ;
+
+Table created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       TABLE : COMMANDE
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE TABLE COMMANDE
+  2  	(
+  3  	 COM_ID NUMBER(6)  NOT NULL,
+  4  	 UTI_ID NUMBER(6)  NOT NULL,
+  5  	 COM_NUMERO NUMBER(6)  NOT NULL,
+  6  	 COM_DATE DATE	NOT NULL,
+  7  	 COM_STATUT CHAR(32)  NOT NULL,
+  8  	 COM_TOTAL NUMBER(5,2)	NULL
+  9  ,	 CONSTRAINT PK_COMMANDE PRIMARY KEY (COM_ID)
+ 10  	) ;
+
+Table created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       INDEX DE LA TABLE COMMANDE
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE  INDEX I_FK_COMMANDE_UTILISATEUR
+  2  	  ON COMMANDE (UTI_ID ASC)
+  3  	 ;
+
+Index created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       TABLE : PRODUIT
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE TABLE PRODUIT
+  2  	(
+  3  	 PRO_ID NUMBER(6)  NOT NULL,
+  4  	 PRO_TYPE VARCHAR2(128)  NOT NULL,
+  5  	 PRO_MODELE VARCHAR2(128)  NOT NULL,
+  6  	 PRO_DESCRIPTION VARCHAR2(3000)  NOT NULL,
+  7  	 PRO_MARQUE VARCHAR2(128)  NOT NULL,
+  8  	 PRO_PRIX NUMBER(5,2)  NOT NULL,
+  9  	 PRO_ISENABLE NUMBER(1)  NOT NULL,
+ 10  	 PRO_IMAGE CLOB  NOT NULL
+ 11  ,	 CONSTRAINT PK_PRODUIT PRIMARY KEY (PRO_ID)
+ 12  	) ;
+
+Table created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       TABLE : LIGNE_COMMANDE
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE TABLE LIGNE_COMMANDE
+  2  	(
+  3  	 COM_ID NUMBER(6)  NOT NULL,
+  4  	 PRO_ID NUMBER(6)  NOT NULL,
+  5  	 LIG_QUANTITE NUMBER(2)  NOT NULL,
+  6  	 PRO_PRIX NUMBER(5,2)  NOT NULL
+  7  ,	 CONSTRAINT PK_LIGNE_COMMANDE PRIMARY KEY (COM_ID, PRO_ID)
+  8  	) ;
+
+Table created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       INDEX DE LA TABLE LIGNE_COMMANDE
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE  INDEX I_FK_LIGNE_COMMANDE_COMMANDE
+  2  	  ON LIGNE_COMMANDE (COM_ID ASC)
+  3  	 ;
+
+Index created.
+
+SQL> 
+SQL> CREATE  INDEX I_FK_LIGNE_COMMANDE_PRODUIT
+  2  	  ON LIGNE_COMMANDE (PRO_ID ASC)
+  3  	 ;
+
+Index created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       TABLE : EVALUATION
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE TABLE EVALUATION
+  2  	(
+  3  	 UTI_ID NUMBER(6)  NOT NULL,
+  4  	 PRO_ID NUMBER(6)  NOT NULL,
+  5  	 EVA_NOTES CHAR(32)  NULL,
+  6  	 EVA_COMMENTAIRE CHAR(32)  NULL
+  7  ,	 CONSTRAINT PK_EVALUATION PRIMARY KEY (UTI_ID, PRO_ID)
+  8  	) ;
+
+Table created.
+
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       INDEX DE LA TABLE EVALUATION
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> CREATE  INDEX I_FK_EVALUATION_UTILISATEUR
+  2  	  ON EVALUATION (UTI_ID ASC)
+  3  	 ;
+
+Index created.
+
+SQL> 
+SQL> CREATE  INDEX I_FK_EVALUATION_PRODUIT
+  2  	  ON EVALUATION (PRO_ID ASC)
+  3  	 ;
+
+Index created.
+
+SQL> 
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> --       CREATION DES REFERENCES DE TABLE
+SQL> -- -----------------------------------------------------------------------------
+SQL> 
+SQL> 
+SQL> ALTER TABLE COMMANDE ADD (
+  2  	  CONSTRAINT FK_COMMANDE_UTILISATEUR
+  3  	       FOREIGN KEY (UTI_ID)
+  4  		    REFERENCES UTILISATEUR (UTI_ID))   ;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE LIGNE_COMMANDE ADD (
+  2  	  CONSTRAINT FK_LIGNE_COMMANDE_COMMANDE
+  3  	       FOREIGN KEY (COM_ID)
+  4  		    REFERENCES COMMANDE (COM_ID))   ;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE LIGNE_COMMANDE ADD (
+  2  	  CONSTRAINT FK_LIGNE_COMMANDE_PRODUIT
+  3  	       FOREIGN KEY (PRO_ID)
+  4  		    REFERENCES PRODUIT (PRO_ID))   ;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE EVALUATION ADD (
+  2  	  CONSTRAINT FK_EVALUATION_UTILISATEUR
+  3  	       FOREIGN KEY (UTI_ID)
+  4  		    REFERENCES UTILISATEUR (UTI_ID))   ;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE EVALUATION ADD (
+  2  	  CONSTRAINT FK_EVALUATION_PRODUIT
+  3  	       FOREIGN KEY (PRO_ID)
+  4  		    REFERENCES PRODUIT (PRO_ID))   ;
+
+Table altered.
+
+SQL> 
+SQL> 
+SQL> -- -----------------------------------------------------------------------------
+SQL> -- 	       FIN DE GENERATION
+SQL> -- -----------------------------------------------------------------------------
+SQL> SPOOL OFF

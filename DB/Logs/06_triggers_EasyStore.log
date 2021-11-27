@@ -1,0 +1,303 @@
+SQL> @.\06_triggers_EasyStore.sql;
+SQL> -- ====================================================================
+SQL> -- Script : 06_triggers_EasyStore.sql
+SQL> -- Objet  : Création des triggers EasyStore sur SGBD Oracle en Local (HEGLOCAL)
+SQL> --
+SQL> -- Mise à jour des versions
+SQL> -- Version  Visa	Date	  Commentaires
+SQL> -- -----  ------ --------	  ------------------------------------------
+SQL> -- 1.0	  GA   2.05.08	  Création trigers
+SQL> -- ====================================================================
+SQL> 
+SQL> DROP SEQUENCE sq_utilisateur;
+DROP SEQUENCE sq_utilisateur
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> DROP SEQUENCE sq_commande;
+DROP SEQUENCE sq_commande
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> DROP SEQUENCE sq_produit;
+DROP SEQUENCE sq_produit
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> DROP SEQUENCE sq_updatePanier;
+DROP SEQUENCE sq_updatePanier
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> DROP SEQUENCE sq_deletePanier;
+DROP SEQUENCE sq_deletePanier
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> DROP SEQUENCE sq_insertPanier;
+DROP SEQUENCE sq_insertPanier
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> DROP SEQUENCE sq_updateStatutCommande;
+DROP SEQUENCE sq_updateStatutCommande
+              *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> 
+SQL> 
+SQL> -- ====================================================
+SQL> -- Trigger Utilisateur incrément
+SQL> -- ====================================================
+SQL> 
+SQL>  CREATE SEQUENCE	sq_utilisateur	MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 11 CACHE 20 NOORDER NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER	tr_utilisateur
+  2    before insert on UTILISATEUR
+  3    for each row
+  4  begin
+  5  	 select sq_utilisateur.nextval into :NEW.uti_id from dual;
+  6  end;
+  7  
+  8  /
+
+Trigger created.
+
+SQL> ALTER TRIGGER  tr_utilisateur ENABLE
+  2  /
+
+Trigger altered.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- Trigger Commande incrément
+SQL> -- ====================================================
+SQL> 
+SQL> 
+SQL>  CREATE SEQUENCE sq_commande MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 36 CACHE 20 NOORDER  NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER	tr_commande
+  2    before insert on commande
+  3    for each row
+  4  begin
+  5  	 select sq_commande.nextval into :NEW.com_id from dual;
+  6  end;
+  7  
+  8  /
+
+Trigger created.
+
+SQL> ALTER TRIGGER  tr_commande ENABLE
+  2  /
+
+Trigger altered.
+
+SQL> -- ====================================================
+SQL> -- Trigger Produit incrément
+SQL> -- ====================================================
+SQL> 
+SQL>  CREATE SEQUENCE	sq_produit  MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 11 CACHE 20 NOORDER  NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER	tr_produit
+  2    before insert on produit
+  3    for each row
+  4  begin
+  5  	 select sq_produit.nextval into :NEW.pro_id from dual;
+  6  end;
+  7  
+  8  /
+
+Trigger created.
+
+SQL> ALTER TRIGGER  tr_produit ENABLE
+  2  /
+
+Trigger altered.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- update du panier (Quantité) à voir
+SQL> -- dans le cas ou la quantité de produits du panier venait a être modifié
+SQL> -- ====================================================
+SQL> 
+SQL>  CREATE SEQUENCE sq_updatePanier  MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 11 CACHE 20 NOORDER  NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER tr_updatePanier
+  2    instead of update on vw_panier
+  3    for each row
+  4  begin
+  5  	 update LIGNE_COMMANDE SET LIGNE_COMMANDE.LIG_QUANTITE = :NEW.ligquantite
+  6  	 WHERE ligne_commande.pro_id = :NEW.idproduit
+  7  	 and ligne_commande.com_id = :NEW.id;
+  8  end;
+  9  
+ 10  
+ 11  /
+
+Warning: Trigger created with compilation errors.
+
+SQL> ALTER TRIGGER  tr_updatePanier ENABLE;
+
+Trigger altered.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- delete du panier à voir
+SQL> -- dans le cas ou un produit est supprimé
+SQL> -- ====================================================
+SQL> 
+SQL>  CREATE SEQUENCE sq_deletePanier  MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 11 CACHE 20 NOORDER  NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER tr_deletePanier
+  2    instead of delete on vw_panier
+  3    for each row
+  4  begin
+  5  	 delete FROM LIGNE_COMMANDE WHERE
+  6  	 ligne_commande.pro_id = :OLD.idproduit
+  7  	 and ligne_commande.com_id = :OLD.id;
+  8  end;
+  9  
+ 10  /
+
+Warning: Trigger created with compilation errors.
+
+SQL> ALTER TRIGGER  tr_deletePanier ENABLE;
+
+Trigger altered.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- insert du panier (Quantité)
+SQL> -- dans le cas ou un produit est ajouté au panier
+SQL> -- ====================================================
+SQL> 
+SQL>  CREATE SEQUENCE sq_insertPanier  MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 11 CACHE 20 NOORDER  NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER tr_insertPanier
+  2    instead of insert on vw_panier
+  3    for each row
+  4  begin
+  5  	 insert into COMMANDE VALUES (:NEW.id, :NEW.userid, :NEW.numcommande, :NEW.datecommande, :NEW.statutcommande, :NEW.totalcommande);
+  6  	 insert into LIGNE_COMMANDE  VALUES (EASYSTORE_DATA.sq_commande.currval, :NEW.ligproduitid, :NEW.ligquantite, :NEW.ligprix);
+  7  
+  8  end;
+  9  
+ 10  
+ 11  
+ 12  /
+
+Trigger created.
+
+SQL> ALTER TRIGGER  tr_insertPanier ENABLE;
+
+Trigger altered.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- Modification du statut de la commande "Administrateur"
+SQL> -- ====================================================
+SQL>  CREATE SEQUENCE sq_updateStatutCommande  MINVALUE 1 NOMAXVALUE INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
+  2  /
+
+Sequence created.
+
+SQL> CREATE OR REPLACE TRIGGER tr_updateStatutCommande
+  2    instead of update on vw_commandeDetail
+  3    for each row
+  4  begin
+  5  	 update COMMANDE SET COMMANDE.COM_STATUT = :NEW.CommandeStatut
+  6  	 WHERE COMMANDE.COM_ID = :NEW.idcommande;
+  7  end;
+  8  /
+
+Trigger created.
+
+SQL> ALTER TRIGGER  tr_updateStatutCommande ENABLE;
+
+Trigger altered.
+
+SQL> 
+SQL> 
+SQL> -----
+SQL> --Remarques :
+SQL> --Pas de suppression dans la base de donnée prévu pour les commandes ainsi que pour les produits (suppression logique plus adaptées)
+SQL> --Pas de trigger prévu pour la vue Evaluation car pas utilisé pour le projet
+SQL> --Ce script ce trouve après celui des insértions car les trigger (auto-incrément) ont été configurer afin de commencer après les données déjà stockées dans la base
+SQL> --Général:
+SQL> --Trigger créer pour l'insert de produit dans le panier
+SQL> --Trigger créer pour l'update du contenu du panier
+SQL> --Trigger créer pour le delete du panier
+SQL> --Administrateur:
+SQL> --Gestion Client -> pas de trigger prévu car vue simple
+SQL> --Gestion Produit -> pas de trigger prévu car vue simple
+SQL> --Gestion Commande -> trigger mis en place afin de modifier le statut de la commande -> seule modification possible pour le detail de la commande de l'application
+SQL> --Client:
+SQL> --Mes Commandes -> pas de trigger car l'utilisateur ne peut pas manipuler les données (fenêtre ne sert qu'à consulter ses commandes)
+SQL> --Mon Compte -> pas de données
+SQL> --Mes Informations -> pas de trigger prévu car vue simple
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> SPOOL OFF

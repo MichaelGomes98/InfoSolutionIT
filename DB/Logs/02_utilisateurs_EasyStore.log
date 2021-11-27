@@ -1,0 +1,138 @@
+SQL> @.\02_utilisateurs_EasyStore.sql
+SQL> -- ====================================================================
+SQL> -- Script : 02_utilisateurs_EasyStore.sql
+SQL> -- Objet  : Création des utilisateurs BDD EasyStore sur SGBD Oracle en Local (HEGLOCAL)
+SQL> --
+SQL> -- Mise à jour des versions
+SQL> -- Version  Visa	Date	  Commentaires
+SQL> -- -----  ------ --------	  ------------------------------------------
+SQL> -- 1.0	  GA   26.03.07    Création utilisateurs
+SQL> -- ====================================================================
+SQL> -- =============================================================================================
+SQL> -- Suppression des rôles, utilisateurs et profil
+SQL> -- =============================================================================================
+SQL> -- Suppression des utilisateurs
+SQL> DROP USER EasyStore_data CASCADE;
+
+User dropped.
+
+SQL> DROP USER EasyStore_user CASCADE;
+
+User dropped.
+
+SQL> 
+SQL> -- Suppression des rôles
+SQL> DROP ROLE role_EasyStore_data CASCADE;
+
+Role dropped.
+
+SQL> DROP ROLE role_EasyStore_user CASCADE;
+
+Role dropped.
+
+SQL> 
+SQL> -- Suppression du profil
+SQL> DROP PROFILE EasyStore_profil;
+
+Profile dropped.
+
+SQL> 
+SQL> -- =============================================================================================
+SQL> -- Création du profil
+SQL> -- =============================================================================================
+SQL> -- Creation du profil EasyStore_profil
+SQL> CREATE PROFILE EasyStore_profil LIMIT
+  2  	     SESSIONS_PER_USER 3
+  3  	     FAILED_LOGIN_ATTEMPTS 3
+  4  	     PASSWORD_LOCK_TIME 1/24
+  5  	     PASSWORD_LIFE_TIME 180
+  6  	     PASSWORD_REUSE_TIME 180
+  7  	     PASSWORD_REUSE_MAX UNLIMITED
+  8  	     PASSWORD_GRACE_TIME 7;
+
+Profile created.
+
+SQL> 
+SQL> -- =============================================================================================
+SQL> -- Création du rôle role_EasyStore_data (rôle de l'utilisateur propriétaire des objets de la base)
+SQL> -- =============================================================================================
+SQL> -- Creation du rôle role_EasyStore_data
+SQL> CREATE ROLE role_EasyStore_data;
+
+Role created.
+
+SQL> 
+SQL> -- droit de se connecter à la BDD
+SQL> GRANT CONNECT TO role_EasyStore_data;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- droit de créer des triggers, séquence, tables, packages, ...
+SQL> GRANT RESOURCE TO role_EasyStore_data;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- droit de créer des vues
+SQL> GRANT CREATE VIEW TO role_EasyStore_data;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- droit de créer des synonymes
+SQL> -- GRANT CREATE ANY SYNONYM TO role_EasyStore_data;
+SQL> -- ! fonctionne mais donne trop de privilèges, à éviter
+SQL> 
+SQL> -- ===============================
+SQL> -- Création du rôle role_EasyStore_user (rôle de l'utilisateur de l'application)
+SQL> -- ===============================
+SQL> -- Creation du rôle role_EasyStore_user
+SQL> CREATE ROLE role_EasyStore_user;
+
+Role created.
+
+SQL> 
+SQL> -- droit de se connecter à la BDD
+SQL> GRANT CREATE SESSION TO role_EasyStore_user;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- ===================================
+SQL> -- Création de l'utilisateur EasyStore_data (propriétaire des objets de schéma de la base)
+SQL> -- ===================================
+SQL> -- Creation de l'utilisateur EasyStore_data
+SQL> CREATE USER EasyStore_data
+  2  	     PROFILE EasyStore_profil
+  3  	     IDENTIFIED BY EasyStore_data
+  4  	     DEFAULT TABLESPACE USERS
+  5  	     TEMPORARY TABLESPACE TEMP
+  6  ;
+
+User created.
+
+SQL> GRANT role_EasyStore_data TO EasyStore_data;
+
+Grant succeeded.
+
+SQL> ALTER USER EasyStore_data quota unlimited ON USERS;
+
+User altered.
+
+SQL> 
+SQL> --===================================
+SQL> --Création de l'utilisateur EasyStore_user (utilisateur de l'application)
+SQL> --===================================
+SQL> CREATE USER EasyStore_user
+  2  	     PROFILE EasyStore_profil
+  3  	     IDENTIFIED BY EasyStore_user
+  4  ;
+
+User created.
+
+SQL> GRANT role_EasyStore_user TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> SPOOL OFF

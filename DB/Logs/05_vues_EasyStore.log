@@ -1,0 +1,138 @@
+SQL> @.\05_vues_EasyStore.sql
+SQL> -- ======================================================================
+SQL> --  Script: 05_vues_EasyStore.sql
+SQL> --  Objet : Création des vues schéma de la base EasyStore
+SQL> --  Objectif : créer des vues et tester l'interrogation et la mise-à-jour à travers ces vues.
+SQL> -- ======================================================================
+SQL> 
+SQL> -- ====================================================
+SQL> -- Création des VUES
+SQL> -- ====================================================
+SQL> -- ====================================================
+SQL> -- Vue d'affichage des utilisateurs
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_utilisateur(Id, Nom, Prenom, Adresse, CodePostal, Email, Password, Connected, Role) AS
+  2  	    SELECT uti_id, uti_nom, uti_prenom, uti_adresse, uti_codepostal, uti_email, uti_password, uti_connected, uti_role
+  3  	    FROM Utilisateur;
+
+View created.
+
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_utilisateur TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- Vue d'affichage des clients
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_client(Id, Nom, Prenom, Adresse, CodePostal, Email, Password, Connected, Role) AS
+  2  	    SELECT uti_id, uti_nom, uti_prenom, uti_adresse, uti_codepostal, uti_email, uti_password, uti_connected, uti_role
+  3  	    FROM Utilisateur WHERE uti_role like 0;
+
+View created.
+
+SQL> ;
+  1  CREATE OR REPLACE VIEW vw_client(Id, Nom, Prenom, Adresse, CodePostal, Email, Password, Connected, Role) AS
+  2         SELECT uti_id, uti_nom, uti_prenom, uti_adresse, uti_codepostal, uti_email, uti_password, uti_connected, uti_role
+  3*        FROM Utilisateur WHERE uti_role like 0
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_client TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> -- ====================================================
+SQL> -- Vue d'affichage des commandes
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_commande(Id, NumeroCommande, DateCommande, StatutCommande, TotalCommande, UserId) AS
+  2  	    SELECT com_id, com_numero, com_date, com_statut, com_total, uti_id
+  3  	    FROM Commande;
+
+View created.
+
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_commande TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> -- ====================================================
+SQL> -- Vue d'affichage des commmandes detaillé
+SQL> -- 	      + les clients
+SQL> -- 	      + La quantité
+SQL> -- 	      + Le produit
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_commandeDetail(Id, Nom, Prenom, IdCommande, CommandeNumero, CommandeStatut, Quantite,IdProduit, TypeProduit, ModeleProduit, ProduitMarque) AS
+  2  	    SELECT Utilisateur.uti_id, Utilisateur.uti_nom, Utilisateur.uti_prenom, Commande.Com_Id, Commande.Com_Numero,Commande.Com_Statut, Ligne_Commande.Lig_Quantite, Produit.Pro_Id, Produit.Pro_Type, Produit.Pro_Modele, produit.pro_marque
+  3  	    FROM Utilisateur
+  4  	    INNER JOIN Commande ON Commande.Uti_Id = Utilisateur.Uti_Id
+  5  	    INNER JOIN Ligne_Commande ON ligne_commande.com_id = Commande.Com_Id
+  6  	    INNER JOIN Produit ON ligne_commande.pro_id = Produit.Pro_Id;
+
+View created.
+
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_commandeDetail TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> -- ====================================================
+SQL> -- Vue d'affichage de la liste des produits
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_produit(Id, Type,  Modele, Description, Marque, Prix, IsEnable, Image) AS
+  2  	    SELECT pro_id, pro_type, pro_modele, pro_description, pro_marque, pro_prix, pro_isenable, pro_image
+  3  	    FROM Produit;
+
+View created.
+
+SQL> ;
+  1  CREATE OR REPLACE VIEW vw_produit(Id, Type,  Modele, Description, Marque, Prix, IsEnable, Image) AS
+  2         SELECT pro_id, pro_type, pro_modele, pro_description, pro_marque, pro_prix, pro_isenable, pro_image
+  3*        FROM Produit
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_produit TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- Vue d'affichage de la liste des evaluations des produits
+SQL> -- 	      + l'utilisateur
+SQL> -- 	      + Le produit
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_evaluations(Id, Nom, Prenom, Notes,  Commentaire, ProduitType, ProduitModele) AS
+  2  	    SELECT Utilisateur.uti_id, uti_nom, uti_prenom, eva_notes, eva_commentaire, produit.pro_type, produit.pro_modele
+  3  	    FROM Evaluation
+  4  	      INNER JOIN Utilisateur ON Utilisateur.Uti_Id = Evaluation.Uti_Id
+  5  	      INNER JOIN Produit ON Produit.Pro_Id = Evaluation.Pro_Id;
+
+View created.
+
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_evaluations TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- ====================================================
+SQL> -- Vue des paniers
+SQL> -- 	      + Commande
+SQL> -- 	      + Ligne Commande
+SQL> -- 	      + Produit
+SQL> -- ====================================================
+SQL> CREATE OR REPLACE VIEW vw_panier(Id, NumCommande, DateCommande, StatutCommande, TotalCommande, UserId, ligCommandeId, ligProduitId, ligQuantite, ligPrix) AS
+  2  	    SELECT commande.com_id, commande.com_numero, commande.com_date, commande.com_statut, commande.com_total, commande.uti_id, ligne_commande.com_id, ligne_commande.pro_id, ligne_commande.lig_quantite, ligne_commande.pro_prix
+  3  	    FROM COMMANDE
+  4  	      INNER JOIN LIGNE_COMMANDE ON COMMANDE.COM_ID = LIGNE_COMMANDE.COM_ID
+  5  	      INNER JOIN Produit ON Produit.Pro_Id = LIGNE_COMMANDE.PRO_ID
+  6  	      WHERE commande.com_statut = 'Panier';
+
+View created.
+
+SQL> GRANT SELECT, INSERT, UPDATE, DELETE ON vw_panier TO EasyStore_user;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> --SELECT * FROM vw_utilisateur;
+SQL> --SELECT * From vw_client;
+SQL> --SELECT * FROM vw_commande;
+SQL> --SELECT * FROM vw_produit;
+SQL> --SELECT * FROM vw_evaluations;
+SQL> --SELECT * FROM vw_panier;
+SQL> SPOOL OFF
