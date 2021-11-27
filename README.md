@@ -13,8 +13,8 @@
 * SQL
 	
 ## Fonctionnalités
-###Partie administrateur:
-- Gestion produit 
+###### Partie administrateur:
+* Gestion produit 
 --- L'administrateur à une vue de l'ensemble des produits visibles dans le catalogue.   
 --- L'administrateur peut ajouter des produits dans le catalogue
 --- L'administrateur peut supprimer des produits (suppression logique)
