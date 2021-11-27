@@ -1,1 +1,0 @@
-Dans ce dossier ce trouve tous les scripts déstiné à la création de la base de donnée de l'application
